@@ -1,52 +1,20 @@
-#include "ANN.h"
-#include "Layer.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
-#include <vector>
-using namespace std;
+#include <Eigen/Dense>
+#include "ANN.h"
 
-void readCSV(const std::string &filename) {
-  std::ifstream file(filename);
-
-  if (!file.is_open()) {
-    std::cerr << "Error: Could not open the file!" << std::endl;
-    return;
-  }
-
-  std::string line;
-  while (std::getline(file, line)) {
-    std::stringstream ss(line);
-    std::string value;
-    std::vector<std::string> row;
-
-    while (std::getline(ss, value, ',')) {
-      row.push_back(value);
-    }
-
-    // Print the row for demonstration
-    for (const auto &col : row) {
-      std::cout << col << " ";
-    }
-    std::cout << std::endl;
-  }
-
-  file.close();
-}
 int main() {
-  std::cout << "HI" << "\n";
+    Eigen::MatrixXd X(2, 4);  // 2 input features, 4 training samples
+    X << 0, 0, 1, 1,
+         0, 1, 0, 1; 
 
-  /* readCSV("D:\\gerry\\ann\\mushrooms.csv"); */
-  std::vector<Layer> layers;
+    Eigen::MatrixXd y(1, 4);  // Expected output (XOR problem)
+    y << 0, 1, 1, 0;  
 
-  layers.emplace_back(Layer(3));
-  layers.emplace_back(Layer(10));
-  layers.emplace_back(Layer(10));
-  layers.emplace_back(Layer(2));
+    ANN ann(2, 3, 1, 0.1);  // 2-input, 3-hidden, 1-output, learning rate=0.1
+    ann.train(X, y, 1000);
 
-  cout << "done initiating layers" << endl;
+    Eigen::MatrixXd prediction = ann.forward(X);
+    std::cout << "Predicted Output:\n" << prediction << std::endl;
 
-  ANN myNetwork(layers);
-  vector<float> test = {21.3, 40, 4};
-  myNetwork.forward(test);
+    return 0;
 }

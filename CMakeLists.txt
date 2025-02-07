@@ -9,8 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(SOURCE_FILES
     src/main.cpp
-    # src/Layer.cpp
-    # src/ANN.cpp
+    src/ANN.cpp
     )
 
 include(FetchContent)
